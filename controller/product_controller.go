@@ -19,7 +19,15 @@ func (p *ProductController) GetProducts(c *gin.Context) {
 
 	var productList []entity.Product
 
-	p.DB.Find(&productList)
+	err := p.DB.Find(&productList).Error
+
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": "Error Get Products",
+			"error":   err,
+		})
+		return
+	}
 
 	c.JSON(200, gin.H{
 		"message": "Get Products",
